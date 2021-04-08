@@ -29,7 +29,6 @@ void loop() {
 
 }
 
-
 // blink the LED on the given pin for the duration in milliseconds
 
 void blinkLED(int pin, int duration)
@@ -49,6 +48,5 @@ void blinkCount(int pin, int times)
     delay(800);
 
   }
-
 
 }
