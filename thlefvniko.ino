@@ -1,7 +1,7 @@
 
 
-int ledBoard[5] = {12, 10, 8, 6, 2};
-int lightTimesBoard[5] = {3, 9, 6, 11, 1};
+int ledBoard[5] = {2, 3, 4, 5, 6};
+int lightTimesBoard[5] = {3, 8, 6, 9, 1};
 
 void setup() {
   // put your setup code here, to run once:
