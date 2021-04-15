@@ -13,7 +13,6 @@ void setup() {
     pinMode(ledBoard[i], OUTPUT); // declare LED pins as output
     pinMode(UpJackBoard[i], OUTPUT);
     pinMode(DownJackBoard[i], INPUT);
-    digitalWrite(UpJackBoard[i], LOW);
   }
   // 2 problems. na mou elegxei kai apo pou erxete reyma oxi mono an pernaei. Kai na moy sbhnei amesws otan to jesyndew(na dokimasw for mesa sth for alla poly xronoboro)
 
@@ -22,8 +21,8 @@ void setup() {
 void loop() {
 
   for (int i = 0; i < 5; i = i + 1) // blinking. Puzzle reset
-  { 
-    CorrectConnection[i] = digitalRead (DownJackBoard[i]);//new check trial
+  {
+    CorrectConnection[i] = testConnection(i);
     if (CorrectConnection[i] == 0) { //this if prevents the for puzzle reset loop from turning off the correctly connected light
 
       digitalWrite(ledBoard[i], LOW);// if it got disconnected it turns it off
@@ -33,40 +32,37 @@ void loop() {
   }
 
   for (int i = 0; i < 5; i = i + 1) {
-    
-    CorrectConnection[i] = digitalRead (DownJackBoard[i]);//new check trial
+
+    CorrectConnection[i] = testConnection(i);
     if (CorrectConnection[i] == 1) {//checks if connected??useful?
 
       digitalWrite(ledBoard[i], HIGH);
     }
     else //(CorrectConnection[i] == 0) {  //checks if disconnected
     {
-      digitalWrite(ledBoard[i], LOW);//turns off disconnected
-      blinkCount(ledBoard[i], lightTimesBoard[i]);
+      blinkCount(ledBoard[i], lightTimesBoard[i]);//hint
 
+      unsigned long time_start = millis();// start time
+
+      while (millis() - time_start <= 2000) {
+
+        //  if() {//gia to apo pou erxetai to reyma. to ena pinaki na syndeetai me to allo kapws
+
+         CorrectConnection[i] = testConnection(i);
+
+        //}
+      }
+      if ( CorrectConnection[i] == 1 ) {
+
+        digitalWrite(ledBoard[i], HIGH);
+        delay(1000);
+      }
+      else {
+        digitalWrite(ledBoard[i], LOW);
+
+      }
     }
-    digitalWrite(UpJackBoard[i], HIGH);//probably useless for a second time. 
-
-    unsigned long time_start = millis();// start time
-
-    while (millis() - time_start <= 2000) {
-
-      //  if() {//gia to apo pou erxetai to reyma. to ena pinaki na syndeetai me to allo kapws
-
-      CorrectConnection[i] = digitalRead (DownJackBoard[i]);
-
-      //}
-    }
-    if ( CorrectConnection[i] == 1 ) {
-
-      digitalWrite(ledBoard[i], HIGH);
-      delay(2000);
-    }
-    else {
-      digitalWrite(ledBoard[i], LOW);
-     
-    }
-    CorrectConnection[i] = digitalRead (DownJackBoard[i]);//new check trial
+    // CorrectConnection[i] = digitalRead (DownJackBoard[i]);//new check trial
   }
 
 }
@@ -89,4 +85,15 @@ void blinkCount(int pin, int times)
     CorrectConnection[i] = digitalRead (DownJackBoard[i]);//new check trial
   }
 
+}
+
+bool testConnection(int cable) {
+  bool cableConnected;
+  for (int i = 0; i < 5; i = i + 1) {
+    digitalWrite(UpJackBoard[i], LOW);
+  }
+  digitalWrite(UpJackBoard[cable], HIGH);
+  cableConnected = digitalRead (DownJackBoard[cable]);
+  digitalWrite(UpJackBoard[cable], LOW);
+  return cableConnected;
 }
