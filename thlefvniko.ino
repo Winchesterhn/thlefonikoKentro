@@ -1,7 +1,7 @@
 
 
 int ledBoard[5] = {2, 3, 4, 5, 6}; //declare led pins
-int lightTimesBoard[5] = {3, 2, 4, 3, 1};//declare how many times each led has to light up
+int lightTimesBoard[5] = {3, 8, 6, 12, 2};//declare how many times each led has to light up
 int UpJackBoard[5] = {8, 9, 10, 11, 12};
 int DownJackBoard[5] = {A0, A1, A2, A3, A4};
 bool CorrectConnection[5] = {0, 0, 0, 0, 0};
@@ -14,7 +14,7 @@ void setup() {
     pinMode(UpJackBoard[i], OUTPUT);
     pinMode(DownJackBoard[i], INPUT);
   }
-  // 2 problems. na mou elegxei kai apo pou erxete reyma oxi mono an pernaei. Kai na moy sbhnei amesws otan to jesyndew(na dokimasw for mesa sth for alla poly xronoboro)
+  // 1 problem. Kai na moy sbhnei amesws otan to jesyndew(na dokimasw for mesa sth for alla poly xronoboro)
 
 }
 
@@ -27,7 +27,7 @@ void loop() {
 
       digitalWrite(ledBoard[i], LOW);// if it got disconnected it turns it off
       blinkLED(ledBoard[i], 500);
-
+      delay(1000);
     }
   }
 
@@ -40,7 +40,7 @@ void loop() {
     }
     else //(CorrectConnection[i] == 0) {  //checks if disconnected
     {
-      blinkCount(ledBoard[i], lightTimesBoard[i]);//hint
+      blinkCount(ledBoard[i], lightTimesBoard[i]);//puzzle hint
 
       unsigned long time_start = millis();// start time
 
@@ -48,7 +48,7 @@ void loop() {
 
         //  if() {//gia to apo pou erxetai to reyma. to ena pinaki na syndeetai me to allo kapws
 
-         CorrectConnection[i] = testConnection(i);
+        CorrectConnection[i] = testConnection(i);
 
         //}
       }
