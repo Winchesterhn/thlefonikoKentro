@@ -15,12 +15,14 @@ void setup() {
     pinMode(UpJackBoard[i], OUTPUT);
     pinMode(DownJackBoard[i], INPUT);
     pinMode(nDoor, OUTPUT);
+    //    digitalWrite(nDoor, LOW);
   }
   // 1 problem. Kai na moy sbhnei amesws otan to jesyndew(na dokimasw for mesa sth for alla poly xronoboro)
   Serial.begin(9600);
 }
 
 void loop() {
+
   while (puzzleSolved = true) {
     for (int i = 0; i < 5; i = i + 1) // blinking. Puzzle reset
     {
@@ -62,8 +64,11 @@ void loop() {
         }
 
       }
+
     }
+
     Door();
+
   }
 }
 void blinkLED(int pin, int duration) // blink the LED on the given pin for the duration in milliseconds
@@ -101,14 +106,14 @@ bool Door() {
   for (int i = 0; i < 5; i = i + 1) {
     digitalRead (CorrectConnection[i]);
     if (CorrectConnection[i] == 0) {
-      puzzleSolved = true;
-      Serial.print("not solved");
-    }
-    else {
       puzzleSolved = false;
+      Serial.print("notSolved");
+    }
+    else {// ΔΕΝ ΞΕΡΩ ΓΙΑΤΙ ΑΛΛΑ ΔΕ ΜΠΑΙΝΕΙ ΠΟΤΕ ΕΔΩ
+      puzzleSolved = true;
       return puzzleSolved;
       digitalWrite(nDoor, HIGH);
-      Serial.print("solved");
+      Serial.print("SOLVED");
     }
   }
 }
