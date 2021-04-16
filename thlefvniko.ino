@@ -5,6 +5,7 @@ int UpJackBoard[5] = {8, 9, 10, 11, 12};
 int DownJackBoard[5] = {A0, A1, A2, A3, A4};
 bool CorrectConnection[5] = {0, 0, 0, 0, 0};
 bool puzzleSolved = false;
+int nDoor = {13};
 
 void setup() {
   // put your setup code here, to run once:
@@ -13,7 +14,7 @@ void setup() {
     pinMode(ledBoard[i], OUTPUT); // declare LED pins as output
     pinMode(UpJackBoard[i], OUTPUT);
     pinMode(DownJackBoard[i], INPUT);
-
+    pinMode(nDoor, OUTPUT);
   }
   // 1 problem. Kai na moy sbhnei amesws otan to jesyndew(na dokimasw for mesa sth for alla poly xronoboro)
   Serial.begin(9600);
@@ -106,6 +107,7 @@ bool Door() {
     else {
       puzzleSolved = false;
       return puzzleSolved;
+      digitalWrite(nDoor, HIGH);
       Serial.print("solved");
     }
   }
