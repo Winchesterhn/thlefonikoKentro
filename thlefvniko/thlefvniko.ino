@@ -46,26 +46,16 @@ void setup() {
 /* 
  * The info of the LED for which the hint is showning
 */
-int times_the_LED_has_blinked = 0;// How many times the LED has already blinked
+int times_the_LED_has_blinked = 0;// How many times the LED has already been turned on
 bool LED_state = false;// If the LED is off or on (to change its state when the timer runs out)
 unsigned long time_start;// How much time has passed since the LED has flipped state
 
 // For which LED to show the hint. Basically, the first wrongly connected cable
 int what_hint_to_show = num_of_LEDs + 1;
-
-/*
- * To know if the LED to show the hint has changed.
- * Basically, to know when to reset:
- * > "times_the_LED_has_blinked" - the number of times the LED has blinked
- * > "LED_state" - This is always reset to "false"
- * > "time_start" - restart the counter for state flip (on -> off OR off -> on)
-*/
 int previously_shown_LED_hint = what_hint_to_show;
 
 void loop() {
-  // Assume all plugs are connected correctly
-  what_hint_to_show = num_of_LEDs + 1;
-  
+  what_hint_to_show = num_of_LEDs + 1;// Assume at the start that the riddle is solved
   checkConnections();
   
   if (what_hint_to_show == num_of_LEDs + 1) {
@@ -76,16 +66,51 @@ void loop() {
   /*
    * The riddle is not yet solved, show the appropriate hint.
   */
+
   // Check if the LED to show the hint has changed
   if (previously_shown_LED_hint != what_hint_to_show) {
-    // Reset all the LED state variables
+    // A different connection than before has been changed and is also incorrect
+    // forget about the first incorrect connection and focus on this one.
+    
+    // Turn off the previous LED
+    digitalWrite(what_hint_to_show, LOW);
+
+    // Reset all the flags
     times_the_LED_has_blinked = 0;
     LED_state = false;
-    time_start = millis();
+    previously_shown_LED_hint = what_hint_to_show;
+  }
+
+  if (times_the_LED_has_blinked == lightTimesBoard[what_hint_to_show]) {
+    // Has already blinked the correct amount of times
+    // Reset the flags
+    times_the_LED_has_blinked = 0;
+    LED_state = false;
+    digitalWrite(what_hint_to_show, LED_state);
   }
 
   if (times_the_LED_has_blinked == 0) {
-    // The LED has not blinked
+    // The LED has not blinked. Start the blinking
+    LED_state = true;
+    digitalWrite(what_hint_to_show, LED_state);
+    times_the_LED_has_blinked++;
+    time_start = millis();
+  }
+
+  if (millis() - time_start > hintBlinkDelay){
+    // It is time to change state
+    LED_state = !LED_state;
+    digitalWrite(what_hint_to_show, LED_state);
+  }
+
+  // A full blink is an < on, -wait-, off, -wait- >
+  //                                   ^      ^
+  //                                 easy    difficult
+  // It is difficult (i.e. not worth it) to know when the second -wait-
+  // is happening. The same result can be achieved if the <off> state
+  // is used.
+  if (LED_state == false) {
+    times_the_LED_has_blinked++;
   }
 
 }
