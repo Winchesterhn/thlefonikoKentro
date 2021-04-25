@@ -43,14 +43,25 @@ void setup() {
   Serial.begin(9600);
 }
 
-
+/* 
+ * The info of the LED for which the hint is showning
+*/
 int times_the_LED_has_blinked = 0;// How many times the LED has already blinked
-bool LED_state = false;// If the LED is off or on
-unsigned long time_start;// How much time has passed since the LED has turned on or off
-
+bool LED_state = false;// If the LED is off or on (to change its state when the timer runs out)
+unsigned long time_start;// How much time has passed since the LED has flipped state
 
 // For which LED to show the hint. Basically, the first wrongly connected cable
 int what_hint_to_show = num_of_LEDs + 1;
+
+/*
+ * To know if the LED to show the hint has changed.
+ * Basically, to know when to reset:
+ * > "times_the_LED_has_blinked" - the number of times the LED has blinked
+ * > "LED_state" - This is always reset to "false"
+ * > "time_start" - restart the counter for state flip (on -> off OR off -> on)
+*/
+int previously_shown_LED_hint = what_hint_to_show;
+
 void loop() {
   // Assume all plugs are connected correctly
   what_hint_to_show = num_of_LEDs + 1;
@@ -64,12 +75,18 @@ void loop() {
 
   /*
    * The riddle is not yet solved, show the appropriate hint.
-   * TODO: Remember in what state (on/off, time for flip) the LED is in.
   */
+  // Check if the LED to show the hint has changed
+  if (previously_shown_LED_hint != what_hint_to_show) {
+    // Reset all the LED state variables
+    times_the_LED_has_blinked = 0;
+    LED_state = false;
+    time_start = millis();
+  }
+
   if (times_the_LED_has_blinked == 0) {
     // The LED has not blinked
   }
-  time_start = millis();// start timer
 
 }
 
